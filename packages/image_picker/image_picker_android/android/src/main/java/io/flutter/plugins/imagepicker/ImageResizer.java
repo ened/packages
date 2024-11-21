@@ -17,8 +17,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 class ImageResizer {
+  /** Extensions that the ImageResizer cannot resize. */
+  private static final Set<String> nonResizeableExtensions =
+    new HashSet<>(Arrays.asList("gif", "svg", "apng"));
+
   private final Context context;
   private final ExifDataCopier exifDataCopier;
 
@@ -43,6 +50,14 @@ class ImageResizer {
     if (!shouldScale) {
       return imagePath;
     }
+
+    // This class cannot resize certain extensions, so skip those.
+    String extension = imagePath.substring(imagePath.lastIndexOf(".") + 1).toLowerCase();
+    boolean canScale = !nonResizeableExtensions.contains(extension);
+    if (!canScale) {
+      return imagePath;
+    }
+    
     try {
       String[] pathParts = imagePath.split("/");
       String imageName = pathParts[pathParts.length - 1];

@@ -40,6 +40,7 @@ public class ImageResizerTest {
   ImageResizer resizer;
   Context mockContext;
   File imageFile;
+  File gifImageFile;
   File svgImageFile;
   File tallJPG;
   File wideJPG;
@@ -52,6 +53,7 @@ public class ImageResizerTest {
   public void setUp() throws IOException {
     mockCloseable = MockitoAnnotations.openMocks(this);
     imageFile = new File(getClass().getClassLoader().getResource("pngImage.png").getFile());
+    gifImageFile = new File(getClass().getClassLoader().getResource("dash-fainting.gif").getFile());
     svgImageFile = new File(getClass().getClassLoader().getResource("flutter_image.svg").getFile());
     // tallJPG has height 7px and width 4px.
     tallJPG = new File(getClass().getClassLoader().getResource("jpgImageTall.jpg").getFile());
@@ -93,6 +95,12 @@ public class ImageResizerTest {
   public void onResizeImageIfNeeded_whenHeightIsNotNull_shouldResize_returnResizedFile() {
     String outputFile = resizer.resizeImageIfNeeded(imageFile.getPath(), null, 50.0, 100);
     assertThat(outputFile, equalTo(externalDirectory.getPath() + "/scaled_pngImage.png"));
+  }
+
+  @Test
+  public void onResizeImageIfNeeded_WhenImageIsGif_ShouldNotResize_ReturnUnscaledFile() {
+    String outputFilePath = resizer.resizeImageIfNeeded(gifImageFile.getPath(), null, null, 50);
+    assertThat(outputFilePath, equalTo(gifImageFile.getPath()));
   }
 
   @Test
