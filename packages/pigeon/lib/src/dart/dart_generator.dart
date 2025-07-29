@@ -136,6 +136,7 @@ class DartGenerator extends StructuredGenerator<InternalDartOptions> {
     Indent indent, {
     required String dartPackageName,
   }) {
+    intent.writeln('// dart format off');
     if (generatorOptions.copyrightHeader != null) {
       addLines(indent, generatorOptions.copyrightHeader!, linePrefix: '// ');
     }
